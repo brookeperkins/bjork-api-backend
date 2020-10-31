@@ -26,4 +26,30 @@ describe('bjork-api-be routes', () => {
         });
       });
   });
+
+  it ('gets all the bjork outfit entries', async() => {
+    const outfits = await Promise.all([{
+      img: 'bjork.jpg',
+      year: 2000,
+      quote: 'something something something -bjork'
+    },
+    {
+      img: 'bjork1.jpg',
+      year: 1994,
+      quote: 'here is another quote by me, bjork!'
+    },
+    {
+      img: 'swandress.jpg',
+      year: 2012,
+      quote: 'something in icelandic, perhaps?'
+    }].map(outfit => Outfit.insert(outfit)));
+
+    return request(app)
+      .get('/api/outfits')
+      .then(res => {
+        outfits.forEach(outfit => {
+          expect(res.body).toContainEqual(outfit);
+        });
+      });
+  });
 });
